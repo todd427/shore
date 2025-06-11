@@ -5,7 +5,9 @@ from .forms import CustomUserCreationForm, CustomUserChangeForm
 User = get_user_model()
 
 class CustomUserModelTests(TestCase):
+    print("CustomUserModelTests")
     def test_create_user(self):
+        print("test_create_user")
         user = User.objects.create_user(
             username="testuser",
             email="test@example.com",
@@ -16,6 +18,7 @@ class CustomUserModelTests(TestCase):
         self.assertTrue(user.check_password("securepass123"))
 
     def test_create_superuser(self):
+        print("test_create_superuser")
         superuser = User.objects.create_superuser(
             username="admin",
             email="admin@example.com",
@@ -25,7 +28,9 @@ class CustomUserModelTests(TestCase):
         self.assertTrue(superuser.is_staff)
 
 class CustomUserCreationFormTests(TestCase):
+    print("CustomUserCreationFormTests")
     def test_valid_form(self):
+        print("test_valid_form")
         form_data = {
             "username": "newuser",
             "email": "newuser@example.com",
@@ -36,6 +41,7 @@ class CustomUserCreationFormTests(TestCase):
         self.assertTrue(form.is_valid())
 
     def test_password_mismatch(self):
+        print("test_password_mismatch")
         form_data = {
             "username": "newuser",
             "email": "newuser@example.com",
@@ -47,7 +53,9 @@ class CustomUserCreationFormTests(TestCase):
         self.assertIn("password2", form.errors)
 
 class CustomUserChangeFormTests(TestCase):
+    print("CustomUserChangeFormTests")
     def test_change_email(self):
+        print("test_change_email")
         user = User.objects.create_user(
             username="testuser",
             email="old@example.com",
