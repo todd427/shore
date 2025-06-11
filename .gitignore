@@ -16,6 +16,7 @@ venv/
 *.pot
 *.pyc
 db.sqlite3
+reset2main
 media/
 staticfiles/
 *.sqlite3
