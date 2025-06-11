@@ -22,4 +22,4 @@ class HomePageViewTests(TestCase):
     def test_home_page_content(self):
         print("test_home_page_content")
         response = self.client.get(reverse("pages:home"))
-        self.assertContains(response, "This is our home page.")  # adjust based on your actual content
+        self.assertContains(response, "Welcome to the Shore")  # adjust based on your actual content
