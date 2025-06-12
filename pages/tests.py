@@ -1,5 +1,6 @@
 from django.test import TestCase
-from django.urls import reverse
+from django.urls import reverse, resolve
+from .views import HomePageView
 
 
 class HomePageViewTests(TestCase):
@@ -23,3 +24,8 @@ class HomePageViewTests(TestCase):
         print("test_home_page_content")
         response = self.client.get(reverse("pages:home"))
         self.assertContains(response, "Welcome to")  # adjust based on your actual content
+
+    def test_home_page_url_resolves_to_home_page_view(self):
+        print("test_home_page_url_resolves_to_home_page_view")
+        view = resolve("/")
+        self.assertEqual(view.func.view_class, HomePageView)
