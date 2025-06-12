@@ -53,11 +53,15 @@ STATICFILES_DIRS = [
 LOGIN_REDIRECT_URL = "home"
 LOGOUT_REDIRECT_URL = "home"
 
+from pathlib import Path
+
+BASE_DIR = Path(__file__).resolve().parent.parent
+
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [],  # Leave this empty unless you want to add global templates
-        'APP_DIRS': True,  # This is what makes per-app templates work!
+        'DIRS': [BASE_DIR / "templates"],  # ✅ now it looks in your top-level templates folder
+        'APP_DIRS': True,  # ✅ enables app/templates/app/*.html lookup
         'OPTIONS': {
             'context_processors': [
                 'django.template.context_processors.debug',
@@ -68,6 +72,7 @@ TEMPLATES = [
         },
     },
 ]
+
 
 
 MIDDLEWARE = [
@@ -81,22 +86,6 @@ MIDDLEWARE = [
 ]
 
 ROOT_URLCONF = 'shore.urls'
-
-TEMPLATES = [
-    {
-        'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [],
-        'APP_DIRS': True,
-        'OPTIONS': {
-            'context_processors': [
-                'django.template.context_processors.debug',
-                'django.template.context_processors.request',
-                'django.contrib.auth.context_processors.auth',
-                'django.contrib.messages.context_processors.messages',
-            ],
-        },
-    },
-]
 
 WSGI_APPLICATION = 'shore.wsgi.application'
 
