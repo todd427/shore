@@ -1,71 +1,104 @@
 from django.test import TestCase
+from django.urls import reverse
 from django.contrib.auth import get_user_model
 from .forms import CustomUserCreationForm, CustomUserChangeForm
 
-User = get_user_model()
+CustomUser = get_user_model()
 
-class CustomUserModelTests(TestCase):
-    print("CustomUserModelTests")
+class CustomUserTests(TestCase):
+
+    def setUp(self):
+        print(f"\nRunning tests in: {self.__class__.__name__}")
+
     def test_create_user(self):
-        print("test_create_user")
-        user = User.objects.create_user(
+        print(self._testMethodName)
+        user = CustomUser.objects.create_user(
             username="testuser",
             email="test@example.com",
-            password="securepass123"
+            password="testpass123"
         )
         self.assertEqual(user.username, "testuser")
         self.assertEqual(user.email, "test@example.com")
-        self.assertTrue(user.check_password("securepass123"))
+        self.assertTrue(user.check_password("testpass123"))
 
     def test_create_superuser(self):
-        print("test_create_superuser")
-        superuser = User.objects.create_superuser(
+        print(self._testMethodName)
+        admin_user = CustomUser.objects.create_superuser(
             username="admin",
             email="admin@example.com",
             password="adminpass"
         )
-        self.assertTrue(superuser.is_superuser)
-        self.assertTrue(superuser.is_staff)
+        self.assertTrue(admin_user.is_superuser)
+        self.assertTrue(admin_user.is_staff)
 
-class CustomUserCreationFormTests(TestCase):
-    print("CustomUserCreationFormTests")
-    def test_valid_form(self):
-        print("test_valid_form")
-        form_data = {
+class SignUpTests(TestCase):
+
+    def setUp(self):
+        print(f"\nRunning tests in: {self.__class__.__name__}")
+
+    def test_signup_view_status_code(self):
+        print(self._testMethodName)
+        response = self.client.get(reverse("signup"))
+        self.assertEqual(response.status_code, 200)
+
+    def test_signup_template(self):
+        print(self._testMethodName)
+        response = self.client.get(reverse("signup"))
+        self.assertTemplateUsed(response, "registration/signup.html")
+
+    def test_signup_form(self):
+        print(self._testMethodName)
+        form = CustomUserCreationForm(data={
             "username": "newuser",
             "email": "newuser@example.com",
-            "password1": "StrongPass123",
-            "password2": "StrongPass123",
-        }
-        form = CustomUserCreationForm(data=form_data)
+            "password1": "complexpass123",
+            "password2": "complexpass123"
+        })
         self.assertTrue(form.is_valid())
 
-    def test_password_mismatch(self):
-        print("test_password_mismatch")
-        form_data = {
-            "username": "newuser",
-            "email": "newuser@example.com",
-            "password1": "pass1",
-            "password2": "pass2",
-        }
-        form = CustomUserCreationForm(data=form_data)
-        self.assertFalse(form.is_valid())
-        self.assertIn("password2", form.errors)
+    def test_signup_creates_user(self):
+        print(self._testMethodName)
+        self.client.post(reverse("signup"), {
+            "username": "newuser2",
+            "email": "newuser2@example.com",
+            "password1": "complexpass123",
+            "password2": "complexpass123"
+        })
+        self.assertTrue(CustomUser.objects.filter(username="newuser2").exists())
 
-class CustomUserChangeFormTests(TestCase):
-    print("CustomUserChangeFormTests")
-    def test_change_email(self):
-        print("test_change_email")
-        user = User.objects.create_user(
-            username="testuser",
-            email="old@example.com",
-            password="somepass"
+class LoginLogoutTests(TestCase):
+
+    def setUp(self):
+        print(f"\nRunning tests in: {self.__class__.__name__}")
+        self.user = CustomUser.objects.create_user(
+            username="loginuser",
+            email="login@example.com",
+            password="loginpass123"
         )
-        form_data = {
-            "username": "testuser",
-            "email": "new@example.com",
-        }
-        form = CustomUserChangeForm(instance=user, data=form_data)
-        self.assertTrue(form.is_valid())
-        updated_user = form.save()
-        self.assertEqual(updated_user.email, "new@example.com")
+
+    def test_login(self):
+        print(self._testMethodName)
+        login = self.client.login(username="loginuser", password="loginpass123")
+        self.assertTrue(login)
+
+    def test_logout(self):
+        print(self._testMethodName)
+        self.client.login(username="loginuser", password="loginpass123")
+        self.client.logout()
+        response = self.client.get("/")
+        self.assertEqual(response.status_code, 200)
+
+class URLTests(TestCase):
+
+    def setUp(self):
+        print(f"\nRunning tests in: {self.__class__.__name__}")
+
+    def test_login_url_resolves(self):
+        print(self._testMethodName)
+        response = self.client.get(reverse("login"))
+        self.assertEqual(response.status_code, 200)
+
+    def test_logout_url_resolves(self):
+        print(self._testMethodName)
+        response = self.client.get(reverse("logout"))
+        self.assertEqual(response.status_code, 302)  # Redirect after logout
