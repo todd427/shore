@@ -12,6 +12,11 @@
 </div>
 {% if user.is_authenticated %}
 <p>Welcome, {{ user.email }}.</p>
+<p>here we are again, naturally.</p>
+<form method="post" action="{% url 'logout' %}">
+  {% csrf_token %}
+  <button type="submit">Log Out</button>
+</form>
 {% else %}
 <p>Please <a href="{% url 'login' %}">Login</a></p>
 {% endif %}
