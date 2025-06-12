@@ -37,6 +37,7 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'django_extensions',
     'accounts.apps.AccountsConfig',
     'pages.apps.PagesConfig',
 ]
@@ -49,11 +50,14 @@ STATICFILES_DIRS = [
     BASE_DIR / "static",
 ]
 
+LOGIN_REDIRECT_URL = "home"
+LOGOUT_REDIRECT_URL = "home"
+
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [],
-        'APP_DIRS': True,
+        'DIRS': [],  # Leave this empty unless you want to add global templates
+        'APP_DIRS': True,  # This is what makes per-app templates work!
         'OPTIONS': {
             'context_processors': [
                 'django.template.context_processors.debug',
