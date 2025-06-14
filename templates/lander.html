@@ -22,18 +22,22 @@
             header.insertCell().innerText = "Height";
             header.insertCell().innerText = "Speed";
             header.insertCell().innerText = "Fuel";
+            header.insertCell().innerText = "Time";
 
             // Add data row
             var height = 2500;
             var speed = -450;
             var fuel = 600;
+            var time = 0;
             var row = table.insertRow();
             var heightCell = row.insertCell();
             var speedCell = row.insertCell();
             var fuelCell = row.insertCell();
+            var timeCell = row.insertCell();
             heightCell.innerText = height;
             speedCell.innerText = speed;
             fuelCell.innerText = fuel;
+            timeCell.innerText = time.toString().padStart(3, '0');
 
             // Physics constants
             var thrust = 1;
@@ -91,6 +95,9 @@
                     setTimeout(() => { speedCell.innerText = speed; }, 400);
                     flashCell(fuelCell);
                     setTimeout(() => { fuelCell.innerText = fuel; }, 400);
+                    time++;
+                    flashCell(timeCell);
+                    setTimeout(() => { timeCell.innerText = time.toString().padStart(3, '0'); }, 400);
 
                     // Status logic
                     statusMsg.classList.remove('status-win', 'status-lose');
