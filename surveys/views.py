@@ -129,3 +129,21 @@ def questionnaire(request, code):
         "questions": questions,
         "age_choices": AGE_CHOICES,
     })
+from django.contrib.admin.views.decorators import staff_member_required
+from django.http import JsonResponse
+from .models import Response
+
+@staff_member_required  # requires staff login to access
+def response_list(request):
+    responses = Response.objects.all().order_by('-submitted_at')
+    data = [
+        {
+            "uuid": r.uuid,
+            "age": r.age,
+            "score": r.total_score,
+            "sections": r.scores,
+            "time": r.submitted_at.isoformat()
+        }
+        for r in responses
+    ]
+    return JsonResponse(data, safe=False)

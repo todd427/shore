@@ -1,9 +1,9 @@
 from django.urls import path
-from .views import questionnaire_view
+from .views import questionnaire_view, response_list, results_dashboard, export_csv 
 
 urlpatterns = [
-    
-    path('<slug:code>/', questionnaire_view, name='take_questionnaire'),
+    path('results/', response_list, name='response_list'),
+    path('<slug:code>/', questionnaire_view, name='questionnaire'),
 ]
 
 
