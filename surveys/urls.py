@@ -7,4 +7,7 @@ urlpatterns = [
     path('<slug:code>/results/', results_dashboard, name='results_dashboard'),
     path('<slug:code>/export/', export_csv, name='export_csv'),
     path('<slug:code>/', questionnaire_view, name='questionnaire'),
+    path('<slug:code>/results/', results_dashboard, name='results_dashboard'),
+    path('<slug:code>/export/', export_csv, name='export_csv'),
+
 ]

@@ -2,6 +2,7 @@
 {% block content %}
   <h1>Response Dashboard</h1>
   <h2>{{ questionnaire.title }}</h2>
+  <p><strong>{{ num_responses }}</strong> responses submitted.</p>
   <p><a href="/surveys/{{ questionnaire.code }}/export/">⬇️ Download CSV</a></p>
 
   <table border="1" cellpadding="6">
