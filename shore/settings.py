@@ -42,6 +42,7 @@ INSTALLED_APPS = [
     'django_extensions',
     'accounts.apps.AccountsConfig',
     'pages.apps.PagesConfig',
+    'surveys.apps.SurveysConfig',
 ]
 
 AUTH_USER_MODEL = 'accounts.CustomUser'

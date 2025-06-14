@@ -1,0 +1,29 @@
+<h1>Results for {{ questionnaire.title }}</h1>
+<p><a href="{% url 'export_csv' questionnaire.code %}">Download CSV</a></p>
+
+<table border="1" cellpadding="4">
+  <thead>
+    <tr>
+      <th>UUID</th>
+      <th>Age</th>
+      <th>Submitted At</th>
+      <th>Total Score</th>
+      <th>Scores</th>
+    </tr>
+  </thead>
+  <tbody>
+    {% for r in responses %}
+    <tr>
+      <td>{{ r.uuid }}</td>
+      <td>{{ r.age }}</td>
+      <td>{{ r.submitted_at }}</td>
+      <td>{{ r.total_score }}</td>
+      <td>
+        {% for key, val in r.scores.items %}
+          {{ key }}: {{ val }}<br>
+        {% endfor %}
+      </td>
+    </tr>
+    {% endfor %}
+  </tbody>
+</table>

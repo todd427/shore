@@ -1,0 +1,36 @@
+{% extends "base.html" %}
+{% load crispy_forms_tags %}
+{% block title %}
+{{ questionnaire.title }}
+{% endblock title %}
+<script>
+  function hashString(str) {
+    let hash = 0;
+    for (let i = 0; i < str.length; i++) {
+      hash = ((hash << 5) - hash) + str.charCodeAt(i);
+      hash |= 0;
+    }
+    return 'uuid-' + Math.abs(hash).toString(16);
+  }
+  
+  fetch('https://api.ipify.org?format=json')
+    .then(res => res.json())
+    .then(data => {
+      const uuid = hashString(data.ip + navigator.userAgent);
+      document.getElementById("uuidInput").value = uuid;
+    });
+  </script>
+  
+
+{% block content %}
+<h1>{{ questionnaire.title }}</h1>
+<p>{{ questionnaire.description }}</p>
+
+<form method="post">
+  {% csrf_token %}
+  {{ form|crispy }}
+  <input type="hidden" name="uuid" id="uuidInput">
+  <button type="submit">Submit</button>
+</form>
+
+{% endblock content %}

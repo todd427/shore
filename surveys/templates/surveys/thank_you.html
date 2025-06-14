@@ -1,0 +1,13 @@
+{% extends "base.html" %}
+{% block content %}
+  <h1>Thank You!</h1>
+  <p>Your submission has been recorded.</p>
+  <p><strong>Response ID:</strong> {{ uuid }}</p>
+  <p><strong>Total Score:</strong> {{ total }}</p>
+  <h3>Section Scores:</h3>
+  <ul>
+    {% for key, val in scores.items %}
+      <li>{{ key }}: {{ val }}</li>
+    {% endfor %}
+  </ul>
+{% endblock %}
