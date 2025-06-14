@@ -1,24 +1,24 @@
 <!-- templates/home.html -->
 {% extends "base.html" %}
+{% load crispy_forms_tags %}  <!-- for crispy forms --> 
 {% load static %}
-
-{% block title %}Home{% endblock title %}
-<h1>Welcome to the Shore</h1>
 {% block content %}
-<bgcolor="black">
+<div class="container">
 <h1 style="text-align:center">Welcome to Foxxe Frey Labs</h1>
-<div>
+<div class="container">
         <img src="{% static 'images/FoxxeFreyLabs.png' %}" style="width: 20%; height: 20%;" alt="Foxxe Frey Labs">
+        <p>Foxxe Frey Labs is a software development company that specializes in building custom software solutions for businesses.</p>
 </div>
 {% if user.is_authenticated %}
 <p>Welcome, {{ user.email }}.</p>
 <p>here we are again, naturally.</p>
 <form method="post" action="{% url 'logout' %}">
   {% csrf_token %}
-  <button type="submit">Log Out</button>
+  <button class="btn btn-danger" style="margin-left: 10px;"  type="submit">Log Out</button>
 </form>
-{% else %}
-<p>Please <a href="{% url 'login' %}">Login</a></p>
-<p>Don't have an account? <a href="{% url 'signup' %}">Sign Up</a></p>
+{% else %}    
+<p>Please <a class="btn btn-primary" style="margin-left: 10px;" href="{% url 'login' %}">Login</a></p>
+<p>Don't have an account? <a class="btn btn-primary" style="margin-left: 10px;" href="{% url 'signup' %}">Sign Up</a></p>
 {% endif %}
+</div>
 {% endblock content %} 
