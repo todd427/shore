@@ -8,4 +8,4 @@ urlpatterns = [
     path('', HomePageView.as_view(), name='home'),
     path('lander/', LanderPageView.as_view(), name='lander'),
     path('test/', TestTemplateView.as_view(), name='test_template'),
-]
+   ]
