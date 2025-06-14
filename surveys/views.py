@@ -147,3 +147,38 @@ def response_list(request):
         for r in responses
     ]
     return JsonResponse(data, safe=False)
+
+from django.contrib.admin.views.decorators import staff_member_required
+from django.shortcuts import render
+import csv
+from django.http import HttpResponse
+
+# Already imported: Response
+
+@staff_member_required
+def results_dashboard(request):
+    responses = Response.objects.all().order_by('-submitted_at')
+    return render(request, 'surveys/results_dashboard.html', {
+        'responses': responses
+    })
+
+@staff_member_required
+def export_csv(request):
+    responses = Response.objects.all().order_by('-submitted_at')
+
+    response = HttpResponse(content_type='text/csv')
+    response['Content-Disposition'] = 'attachment; filename="questionnaire_results.csv"'
+
+    writer = csv.writer(response)
+    writer.writerow(['UUID', 'Age', 'Total Score', 'Scores by Section', 'Submitted At'])
+
+    for r in responses:
+        writer.writerow([
+            r.uuid,
+            r.age,
+            r.total_score,
+            json.dumps(r.scores),
+            r.submitted_at.isoformat()
+        ])
+
+    return response
