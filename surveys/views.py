@@ -8,7 +8,7 @@ import hashlib
 import json
 import csv
 
-from .models import Questionnaire, Question, Response, AGE_CHOICES
+from .models import Questionnaire, Question, Response, AGE_CHOICES, ProgrammerResponse
 from .forms import DynamicSurveyForm
 
 # Utility to generate UUID
@@ -91,8 +91,10 @@ def results_dashboard(request, code):
     responses = Response.objects.filter(questionnaire=questionnaire).order_by('-submitted_at')
     return render(request, "surveys/results_dashboard.html", {
         "questionnaire": questionnaire,
-        "responses": responses
+        "responses": responses,
+        "num_responses": responses.count()
     })
+
 
 # CSV export of results for a specific questionnaire
 
@@ -115,3 +117,45 @@ def export_csv(request, code):
             json.dumps(r.scores)
         ])
     return response
+
+from .forms import ProgrammerSurveyForm
+
+def programmer_questionnaire_view(request):
+    submitted = False
+    if request.method == 'POST':
+        form = ProgrammerSurveyForm(request.POST)
+        if form.is_valid():
+            data = form.cleaned_data
+            ProgrammerResponse.objects.create(
+                first_name=data['first_name'],
+                last_name=data['last_name'],
+                age=data['age'],
+                years=data['years'],
+                primary_language=data['primary_language'],
+                languages=data['languages'],
+                other_language=data['other_language'],
+                algorithms=data['algorithms'],
+                data_structures=data['data_structures'],
+                challenges=data['challenges'],
+                git=data['git'],
+                ci_cd=data['ci_cd'],
+                testing=data['testing'],
+                open_source=data['open_source'],
+                largest_project=data['largest_project'],
+                agile=data['agile'],
+                architecture=data['architecture'],
+                concepts=data['concepts'],
+                deployment=data['deployment'],
+                platforms=data['platforms'],
+                platform_other=data['platform_other'],
+                interests=data['interests'],
+                interests_other=data['interests_other'],
+                learning=data['learning'],
+            )
+            submitted = True
+    else:
+        form = ProgrammerSurveyForm()
+    return render(request, 'surveys/questionnaire_progexp.html', {
+        'form': form,
+        'submitted': submitted
+    })

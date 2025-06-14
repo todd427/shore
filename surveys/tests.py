@@ -184,3 +184,9 @@ class SurveyTests(TestCase):
     def _create_admin_user(self):
         User = get_user_model()
         return User.objects.create_superuser('admin', 'admin@example.com', 'password')
+
+    def test_progexp_questionnaire_view_renders(self):
+        response = self.client.get('/surveys/progexp/')
+        self.assertEqual(response.status_code, 200)
+        self.assertContains(response, "Programmer Experience Questionnaire")
+

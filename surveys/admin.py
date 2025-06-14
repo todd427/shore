@@ -36,3 +36,6 @@ admin.site.register(Questionnaire, QuestionnaireAdmin)
 admin.site.register(Question)
 admin.site.register(Response)
 
+from .models import ProgrammerResponse
+admin.site.register(ProgrammerResponse)
+

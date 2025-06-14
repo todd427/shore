@@ -1,0 +1,15 @@
+{% extends "base.html" %}
+{% block content %}
+<h1>Programmer Experience Questionnaire</h1>
+
+{% if submitted %}
+  <div class="alert alert-success">Thanks for your submission!</div>
+{% endif %}
+
+<form method="post">
+  {% csrf_token %}
+  {{ form.as_p }}
+  <button type="submit" class="btn btn-primary">Submit</button>
+</form>
+{% endblock %}
+
