@@ -2,7 +2,8 @@ from django.test import TestCase
 from django.urls import reverse, resolve
 from .views import HomePageView, AboutPageView
 
-
+# HomePageViewTests
+# commit test trigger
 class HomePageViewTests(TestCase):
     print("\n=== HomePageViewTests ===")
     def test_home_page_status_code(self):
