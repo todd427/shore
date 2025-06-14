@@ -1,0 +1,135 @@
+body {
+    background: #181c20;
+    color: #f0f0f0;
+    font-family: 'Segoe UI', Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    min-height: 100vh;
+}
+h1 {
+    margin-top: 40px;
+    font-size: 2.5em;
+    letter-spacing: 2px;
+}
+table {
+    border-collapse: collapse;
+    margin: 30px 0 10px 0;
+    min-width: 490px;
+    /* Burnished steel background */
+    background:
+        /* Subtle noise overlay */
+        url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="60" height="60" viewBox="0 0 60 60"><filter id="noise"><feTurbulence type="fractalNoise" baseFrequency="0.7" numOctaves="2" stitchTiles="stitch"/></filter><rect width="60" height="60" fill="rgba(0,0,0,0)"/><rect width="60" height="60" filter="url(%23noise)" opacity="0.08"/></svg>'),
+        linear-gradient(120deg, #666 0%, #888 40%, #444 100%),
+        repeating-linear-gradient(90deg, #888 0px, #888 2px, #777 2px, #777 6px);
+    box-shadow: 0 2px 8px #0008;
+    border: 2px solid #fff4;
+    border-radius: 18px;
+}
+th, td {
+    border: 1px solid #444;
+    padding: 17px 34px;
+    text-align: center;
+    font-size: 1.68em;
+}
+th {
+    background: #2d3238;
+    color: #ffecb3;
+    font-weight: bold;
+}
+td {
+    color: #e0e0e0;
+}
+label {
+    font-size: 1.1em;
+    margin-right: 8px;
+}
+#burn-input {
+    width: 80px;
+    padding: 6px 10px;
+    border-radius: 4px;
+    border: 1px solid #444;
+    outline: 1.5px solid #fff;
+    background: #23272b;
+    color: #f0f0f0;
+    font-size: 1em;
+    margin-right: 10px;
+}
+#burn-btn {
+    background: #4caf50;
+    color: #fff;
+    border: none;
+    border-radius: 4px;
+    padding: 8px 18px;
+    font-size: 1.1em;
+    cursor: pointer;
+    transition: background 0.2s;
+}
+#burn-btn:hover {
+    background: #388e3c;
+}
+#status-msg {
+    margin-top: 24px;
+    font-size: 1.2em;
+    min-height: 1.5em;
+    padding: 10px 20px;
+    border-radius: 6px;
+    /* background: #23272b; */
+    color: #ffecb3;
+    box-shadow: 0 1px 4px #0006;
+    max-width: 400px;
+    text-align: center;
+}
+.status-win {
+    background: #2e7d32 !important;
+    color: #fff !important;
+}
+.status-lose {
+    background: #b71c1c !important;
+    color: #fff !important;
+}
+.status-over {
+    background: #1565c0 !important;
+    color: #fff !important;
+}
+table, th, td, label, #burn-input, #burn-btn, #status-msg, h1 {
+    font-family: 'Segoe UI', Arial, sans-serif;
+}
+@keyframes flash-green {
+    0%   { background-color: #4caf50; }
+    80%  { background-color: #4caf50; }
+    100% { background-color: inherit; }
+}
+.flash-green {
+    animation: flash-green 0.4s ease;
+}
+#lander_table th {
+    color: #fff !important;
+    background: none !important;
+    font-family: 'Impact', 'Arial Black', Arial, sans-serif !important;
+    font-size: 2.2em !important;
+    font-weight: 900 !important;
+    text-transform: uppercase !important;
+    letter-spacing: 2px !important;
+    border: none !important;
+    opacity: 1 !important;
+    filter: none !important;
+    text-shadow: none !important;
+    transform: none !important;
+}
+#lander_table td {
+    font-family: 'Orbitron', 'Consolas', 'Courier New', monospace;
+    color: #f7f177;
+    text-shadow: 0 0 2px #ff980055;
+    font-size: 1.96em;
+    letter-spacing: 2px;
+    font-weight: 700;
+    background: rgba(30, 20, 0, 0.10);
+    border-radius: 4px;
+    box-shadow: none;
+    padding: 14px 26px;
+}
+
+@import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@700&family=Bebas+Neue:wght@700&display=swap'); 

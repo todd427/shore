@@ -6,6 +6,12 @@ class HomePageView(TemplateView):
 class AboutPageView(TemplateView):
     template_name = 'about.html'
 
+class LanderPageView(TemplateView):
+    template_name = 'lander.html'
+
+class ContactPageView(TemplateView):
+    template_name = 'contact.html'
+
 from django.shortcuts import render
 from django.views import View
 

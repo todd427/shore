@@ -1,0 +1,171 @@
+<DOCTYPE html>
+<html>
+    <head>
+        <title>Lunar Lander Original</title>
+        <link rel="stylesheet" href="/static/css/lander.css">
+    </head>
+    <body>
+        <h1>Lunar Lander</h1>
+
+        <table id="lander_table"></table>
+        <label for="burn-input">Burn amount:</label>
+        <input type="number" id="burn-input" min="0" step="1">
+        <div style="margin-top:2em;">
+            <button id="help-btn" title="About Lunar Lander" style="font-size:1.2em; background:#2196f3; color:white; border:none; border-radius:0.5em; width:4em; height:2em; cursor:pointer; box-shadow:0 2px 6px #0003;">Help</button>
+        </div>
+        <div id="status-msg"></div>
+        <script>
+            var table = document.getElementById("lander_table");
+            // Add header row
+            var header = table.insertRow();
+            header.insertCell().innerText = "Height";
+            header.insertCell().innerText = "Speed";
+            header.insertCell().innerText = "Fuel";
+
+            // Add data row
+            var height = 2500;
+            var speed = -450;
+            var fuel = 600;
+            var row = table.insertRow();
+            var heightCell = row.insertCell();
+            var speedCell = row.insertCell();
+            var fuelCell = row.insertCell();
+            heightCell.innerText = height;
+            speedCell.innerText = speed;
+            fuelCell.innerText = fuel;
+
+            // Physics constants
+            var thrust = 1;
+            var gravity = -5;
+
+            var statusMsg = document.getElementById('status-msg');
+            var burnInput = document.getElementById('burn-input');
+            var gameOver = false;
+
+            function flashCell(cell) {
+                cell.classList.remove('flash-green');
+                void cell.offsetWidth; // Force reflow to restart animation
+                cell.classList.add('flash-green');
+            }
+
+            // Remove burn button and use Enter key in input
+            burnInput.addEventListener('keydown', function(event) {
+                if (event.key === 'Enter' || event.keyCode === 13) {
+                    if (gameOver) {
+                        statusMsg.classList.remove('status-win', 'status-lose');
+                        statusMsg.classList.add('status-over');
+                        statusMsg.innerText = 'Game over! Please refresh to play again.';
+                        return;
+                    }
+
+                    var burn = parseInt(burnInput.value, 10);
+                    if (isNaN(burn) || burn < 0 || burn > 75) {
+                        statusMsg.innerText = 'Please enter a number between 0 and 75.';
+                        return;
+                    }
+                    if (burn > fuel) {
+                        burn = fuel;
+                    }
+
+                    // Update physics
+                    fuel -= burn;
+                    speed = speed + (burn * thrust) + gravity;
+                    height = height + speed;
+
+                    // If height goes below 0, it's a crash
+                    if (height < 0) {
+                        var craterDepth = Math.abs(height).toFixed(2);
+                        statusMsg.classList.remove('status-win', 'status-lose');
+                        statusMsg.innerText = `You have crashed! You made a crater ${craterDepth} meters deep on the moon.`;
+                        statusMsg.classList.add('status-lose');
+                        gameOver = true;
+                        burnInput.value = '';
+                        return;
+                    }
+
+                    // Update table with flash before value change
+                    flashCell(heightCell);
+                    setTimeout(() => { heightCell.innerText = height; }, 400);
+                    flashCell(speedCell);
+                    setTimeout(() => { speedCell.innerText = speed; }, 400);
+                    flashCell(fuelCell);
+                    setTimeout(() => { fuelCell.innerText = fuel; }, 400);
+
+                    // Status logic
+                    statusMsg.classList.remove('status-win', 'status-lose');
+                    if (height === 0) {
+                        if (speed >= -5) {
+                            statusMsg.innerText = 'Congratulations! You have landed safely!';
+                            statusMsg.classList.add('status-win');
+                        } else {
+                            statusMsg.innerText = 'You have crashed!';
+                            statusMsg.classList.add('status-lose');
+                        }
+                        gameOver = true;
+                    } else if (fuel <= 0) {
+                        // Calculate seconds until impact
+                        var seconds = 0;
+                        if (speed < 0) {
+                            seconds = Math.ceil(height / Math.abs(speed));
+                        } else {
+                            // Time to apex
+                            var t1 = speed / Math.abs(gravity);
+                            var h1 = height + speed * t1 + 0.5 * gravity * t1 * t1;
+                            if (h1 < 0) h1 = 0; // Clamp if overshot
+                            // Time to fall from apex
+                            var t2 = Math.sqrt(2 * h1 / Math.abs(gravity));
+                            seconds = Math.ceil(t1 + t2);
+                        }
+                        statusMsg.innerText = `You have run out of fuel! You have about ${seconds} seconds to say your prayers.`;
+                        statusMsg.classList.add('status-lose');
+                        gameOver = true;
+                    } else {
+                        statusMsg.innerText = '';
+                    }
+
+                    burnInput.value = '';
+                }
+            });
+
+            // Help button logic
+            document.getElementById('help-btn').addEventListener('click', function() {
+                var helpWin = window.open('', 'LanderHelp', 'width=420,height=480');
+                helpWin.document.write(`
+                    <html>
+                    <head>
+                        <title>About Lunar Lander</title>
+                        <style>
+                            body { font-family: Arial, sans-serif; margin: 2em; background: #222; color: #eee; }
+                            h2 { color: #ffd700; }
+                            ul { margin-left: 1.2em; }
+                            #return-btn { margin-top: 2em; font-size: 1.1em; background: #2196f3; color: white; border: none; border-radius: 0.4em; padding: 0.5em 1.2em; cursor: pointer; box-shadow: 0 2px 6px #0003; }
+                        </style>
+                    </head>
+                    <body>
+                        <h2>Lunar Lander: How to Play</h2>
+                        <p><b>Goal:</b> Land your lunar module safely on the moon by managing your speed and fuel.</p>
+                        <h3>How it Works</h3>
+                        <ul>
+                            <li>You start with a certain height, downward speed, and a limited amount of fuel.</li>
+                            <li>Each turn, enter how much fuel to burn (0-75 units) and press Enter.</li>
+                            <li>Burning fuel slows your descent. Gravity pulls you down each turn.</li>
+                            <li>Your height, speed, and fuel update after each burn.</li>
+                        </ul>
+                        <h3>How to Win</h3>
+                        <ul>
+                            <li>Land with a speed of -5 or higher (closer to zero) when your height reaches 0.</li>
+                            <li>If you run out of fuel, you will crash unless your speed is already safe.</li>
+                            <li>If you land too fast (speed less than -5), you crash and make a crater!</li>
+                        </ul>
+                        <p>Good luck, Commander!</p>
+                      
+                    
+                    </body>
+                    </html>
+                `);
+                helpWin.document.close();
+            });
+        </script>
+    </body>
+</html>
+
