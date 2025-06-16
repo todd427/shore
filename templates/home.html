@@ -2,11 +2,14 @@
 {% extends "base.html" %}
 {% load crispy_forms_tags %}  <!-- for crispy forms --> 
 {% load static %}
+{% load socialaccount %}
+{% providers_media_js %}
 {% block content %}
 <div class="container">
 <!--
 <h1 style="text-align:center">Welcome to Foxxe Frey Labs</h1>
 -->
+</div>
 <div class="container">
         <img src="{% static 'images/FoxxeFreyLabs.png' %}" style="width: 20%; height: 20%;" alt="Foxxe Frey Labs">
         <h1>Foxxe Frey Labs</h1>
@@ -18,9 +21,12 @@
   {% csrf_token %}
   <button class="btn btn-danger" style="margin-left: 10px;"  type="submit">Log Out</button>
 </form>
-{% else %}    
-<p>Please <a class="btn btn-primary" style="margin-left: 10px;" href="{% url 'account_login' %}">Login</a></p>
+{% else %}  
+<div class="container"></div>
+<a class="btn btn-primary" style="margin-left: 10px;" href="{% provider_login_url 'google' method='oauth2' %}">Log in with Google</a>
+ OR <a class="btn btn-primary" style="margin-left: 10px;" href="{% url 'account_login' %}">Login</a></p>
 <p>Don't have an account? <a class="btn btn-primary" style="margin-left: 10px;" href="{% url 'account_signup' %}">Sign Up</a></p>
 {% endif %}
+</div>
 </div>
 {% endblock content %} 

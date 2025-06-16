@@ -25,7 +25,7 @@ SECRET_KEY = 'django-insecure-)&$#f_zh-bv-+%-ulkdf@hy4!%tjr4!u4^-xl3u$%y26^k!6c^
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ["localhost", "127.0.0.1", "foxxelabs.com"]
 
 
 # Application definition
@@ -80,6 +80,20 @@ ACCOUNT_UNIQUE_EMAIL = True
 ACCOUNT_LOGIN_METHODS = {"email"}
 ACCOUNT_SIGNUP_FIELDS = ["email*", "password1*", "password2*"]
 
+ACCOUNT_EMAIL_VERIFICATION = "none"  # Google already verifies email
+SOCIALACCOUNT_QUERY_EMAIL = True
+LOGIN_REDIRECT_URL = "/"
+SOCIALACCOUNT_PROVIDERS = {
+    "google": {
+        "SCOPE": [
+            "profile",
+            "email",
+        ],
+        "AUTH_PARAMS": {
+            "access_type": "online",
+        }
+    }
+}
 
 from pathlib import Path
 

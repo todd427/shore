@@ -17,10 +17,12 @@
 <body>
   <nav class="navbar navbar-expand-lg navbar-light bg-light">
     <div class="container-fluid">
-      <a class="navbar-brand" href="{% url 'home' %}">Foxxe Frey Labs</a>
+      <a class="navbar-brand" href="{% url 'home' %}">Saucy Goose</a>
+ 
       <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
         <span class="navbar-toggler-icon"></span>
       </button>
+
       <div class="collapse navbar-collapse" id="navbarCollapse">
         <ul class="navbar-nav me-auto mb-2 mb-md-0">
           <li class="nav-item">
@@ -49,6 +51,10 @@
              </li>
           {% else %}
           <li class="nav-item">
+            {% load socialaccount %}
+            {% providers_media_js %}
+            <a href="{% provider_login_url 'google' method='oauth2' %}">Sign in with Google</a>
+            <p>here lucy</p>
             <a class="nav-link" href="{% url 'account_login' %}">Log In</a>
           </li>
           <li class="nav-item">
