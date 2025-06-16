@@ -80,8 +80,18 @@ ACCOUNT_UNIQUE_EMAIL = True
 ACCOUNT_LOGIN_METHODS = {"email"}
 ACCOUNT_SIGNUP_FIELDS = ["email*", "password1*", "password2*"]
 
+ACCOUNT_EMAIL_REQUIRED = True
+ACCOUNT_USERNAME_REQUIRED = False
+ACCOUNT_AUTHENTICATION_METHOD = 'email'
+ACCOUNT_USER_MODEL_USERNAME_FIELD = None
+
+ACCOUNT_SIGNUP_REDIRECT_URL = "/"
 ACCOUNT_EMAIL_VERIFICATION = "none"  # Google already verifies email
 SOCIALACCOUNT_QUERY_EMAIL = True
+SOCIALACCOUNT_AUTO_SIGNUP = True
+SOCIALACCOUNT_LOGIN_ON_GET = True
+
+SOCIALACCOUNT_SIGNUP_REDIRECT_URL = "/"
 LOGIN_REDIRECT_URL = "/"
 SOCIALACCOUNT_PROVIDERS = {
     "google": {
@@ -89,16 +99,20 @@ SOCIALACCOUNT_PROVIDERS = {
             "profile",
             "email",
         ],
-        "AUTH_PARAMS": {
-            "access_type": "online",
-        }
+       'AUTH_PARAMS': {
+            'access_type': 'online',
+            'prompt': 'select_account',
+        },
     }
 }
 
 # allauth settings
 SOCIALACCOUNT_LOGIN_ON_GET = True
-SOCIALACCOUNT_AUTO_SIGNUP = True
-SOCIALACCOUNT_ADAPTER = 'accounts.adapter.NoSocialSignupConfirmAdapter'
+ACCOUNT_ADAPTER = 'accounts.account_adapter.CustomAccountAdapter'
+
+SOCIALACCOUNT_ADAPTER = "accounts.account_adapter.CustomSocialAccountAdapter"
+
+
 
 
 from pathlib import Path
