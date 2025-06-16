@@ -1,0 +1,25 @@
+li a {
+    color: green;
+}
+h1 {
+    color: red;
+    font-size: 20px;
+}
+/* # polls/static/polls/style.css */
+body {
+    position: relative;
+    background-color: rgb(255, 255, 255);
+}
+
+body::before {
+    content: "";
+    background: url("images/background.png") no-repeat center center;
+    /* background-size: cover; */
+    opacity: 0.3;  /* Faded background */
+    position: fixed;
+    top: 0;
+    left: 0;
+    height: 100%;
+    width: 100%;
+    z-index: -1;
+}
