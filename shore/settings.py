@@ -95,6 +95,12 @@ SOCIALACCOUNT_PROVIDERS = {
     }
 }
 
+# allauth settings
+SOCIALACCOUNT_LOGIN_ON_GET = True
+SOCIALACCOUNT_AUTO_SIGNUP = True
+SOCIALACCOUNT_ADAPTER = 'accounts.adapter.NoSocialSignupConfirmAdapter'
+
+
 from pathlib import Path
 
 BASE_DIR = Path(__file__).resolve().parent.parent

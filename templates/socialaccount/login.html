@@ -1,0 +1,27 @@
+{% extends "base.html" %}
+{% load i18n %}
+{% load static %}
+{% load socialaccount %}
+{% providers_media_js %}
+{% block title %}Sign In Via Google{% endblock title %}
+
+{% block content %}
+<div class="container mt-5">
+  <div class="card">
+    <div class="card-header bg-primary text-white">
+      <h5 class="mb-0">Sign In Via Google</h5>
+    </div>
+    <div class="card-body">
+      <p>{% trans "You are about to sign in using a third-party account from Google." %}</p>
+
+      <form method="post" action="">
+
+        {% csrf_token %}
+        {{ form.as_p }}
+        <button type="submit" class="btn btn-success">Continue</button>
+        <a href="{% url 'account_login' %}" class="btn btn-outline-secondary">Cancel</a>
+      </form>
+    </div>
+  </div>
+</div>
+{% endblock %}

@@ -23,6 +23,7 @@
 </form>
 {% else %}  
 <div class="container"></div>
+<p>mangled poe</p>
 <a class="btn btn-primary" style="margin-left: 10px;" href="{% provider_login_url 'google' method='oauth2' %}">Log in with Google</a>
  OR <a class="btn btn-primary" style="margin-left: 10px;" href="{% url 'account_login' %}">Login</a></p>
 <p>Don't have an account? <a class="btn btn-primary" style="margin-left: 10px;" href="{% url 'account_signup' %}">Sign Up</a></p>
