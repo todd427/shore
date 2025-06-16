@@ -1,15 +1,36 @@
 {% extends "base.html" %}
-{% block content %}
-<h1>Programmer Experience Questionnaire</h1>
+{% load crispy_forms_tags %}
+{% block title %}
+{{ questionnaire.title }}
+{% endblock title %}
+<script>
+  function hashString(str) {
+    let hash = 0;
+    for (let i = 0; i < str.length; i++) {
+      hash = ((hash << 5) - hash) + str.charCodeAt(i);
+      hash |= 0;
+    }
+    return 'uuid-' + Math.abs(hash).toString(16);
+  }
+  
+  fetch('https://api.ipify.org?format=json')
+    .then(res => res.json())
+    .then(data => {
+      const uuid = hashString(data.ip + navigator.userAgent);
+      document.getElementById("uuidInput").value = uuid;
+    });
+  </script>
+  
 
-{% if submitted %}
-  <div class="alert alert-success">Thanks for your submission!</div>
-{% endif %}
+{% block content %}
+<h1>{{ questionnaire.title }}</h1>
+<p>{{ questionnaire.description }}</p>
 
 <form method="post">
   {% csrf_token %}
-  {{ form.as_p }}
-  <button type="submit" class="btn btn-primary">Submit</button>
+  {{ form|crispy }}
+  <input type="hidden" name="uuid" id="uuidInput">
+  <button type="submit">Submit</button>
 </form>
-{% endblock %}
 
+{% endblock content %}

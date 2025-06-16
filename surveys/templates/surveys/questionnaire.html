@@ -3,6 +3,7 @@
 {% block title %}
 {{ questionnaire.title }}
 {% endblock title %}
+{% block content %}
 <script>
   function hashString(str) {
     let hash = 0;
@@ -20,15 +21,89 @@
       document.getElementById("uuidInput").value = uuid;
     });
   </script>
-  
-
-{% block content %}
+ 
+<style>
+  p {
+    font-size: 1.5em;
+  }
+  body {
+    background-color: #f3f1e5;
+  }
+  h1 {
+    color: #333;
+  }
+  label {
+    font-size: 1em;
+  }
+  .radio-inline {
+    display: inline-block;
+    margin-right: 1em;
+    font-size: 1em;
+  }
+  .likert-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-bottom: 2em;
+  }
+  .likert-table th, .likert-table td {
+    border: 1px solid #ccc;
+    padding: 0.5em 0.75em;
+    text-align: center;
+  }
+  .likert-table th:first-child, .likert-table td:first-child {
+    text-align: left;
+    width: 50%;
+    font-weight: normal;
+  }
+  .likert-table th {
+    background: #f8f8f8;
+    font-weight: bold;
+  }
+</style>
 <h1>{{ questionnaire.title }}</h1>
 <p>{{ questionnaire.description }}</p>
-
+<p>Please fill out the following survey. It will take about 5 minutes.</p>
 <form method="post">
   {% csrf_token %}
-  {{ form|crispy }}
+  {% for field in form %}
+  {% if field.field.widget.input_type != "radio" %}
+    <div style="margin-bottom: 1em;">
+      <label>{{ field.label }}</label>
+      {{ field }}
+      {% if field.errors %}
+        <div class="text-danger">{{ field.errors }}</div>
+      {% endif %}
+    </div>
+  {% endif %}
+  {% endfor %}
+  <br>
+      <table class="likert-table">
+        <thead>
+          <tr>
+            <th>Question</th>
+            <th>N/A</th>
+            <th>1</th>
+            <th>2</th>
+            <th>3</th>
+            <th>4</th>
+            <th>5</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for field in form %}
+            {% if field.field.widget.input_type == "radio" %}
+              <tr>
+                <td>{{ field.label }}</td>
+                {% for radio in field %}
+                  <td>{{ radio.tag }}</td>
+                {% endfor %}
+              </tr>
+            {% endif %}
+          {% endfor %}
+        </tbody>
+      </table>
+
+  <br>
   <input type="hidden" name="uuid" id="uuidInput">
   <button type="submit">Submit</button>
 </form>

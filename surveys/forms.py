@@ -43,7 +43,11 @@ class ProgrammerSurveyForm(forms.Form):
         ("Go", "Go"),
         ("Rust", "Rust"),
     ]
-    languages = forms.MultipleChoiceField(label="Other languages", choices=LANGUAGES, widget=forms.CheckboxSelectMultiple, required=False)
+    languages = forms.MultipleChoiceField(
+        label="Other languages", 
+        choices=LANGUAGES, 
+        widget=forms.CheckboxSelectMultiple, 
+        required=False)
     other_language = forms.CharField(label="Other language", required=False)
 
     ALGORITHMS = list(reversed([
@@ -51,7 +55,11 @@ class ProgrammerSurveyForm(forms.Form):
         ("With some help", "With some help"),
         ("Not confidently", "Not confidently"),
     ]))
-    algorithms = forms.ChoiceField(label="Can you implement basic algorithms?", choices=ALGORITHMS)
+    algorithms = forms.ChoiceField(
+        label="Can you implement basic algorithms?", 
+        choices=ALGORITHMS, 
+        widget=forms.RadioSelect,
+        required=True)
 
     DATA_STRUCTURES = list(reversed([
         ("Frequently", "Frequently"),
@@ -59,7 +67,11 @@ class ProgrammerSurveyForm(forms.Form):
         ("Only in tutorials", "Only in tutorials"),
         ("Never", "Never"),
     ]))
-    data_structures = forms.ChoiceField(label="Used complex data structures?", choices=DATA_STRUCTURES)
+    data_structures = forms.ChoiceField(
+        label="Used complex data structures?", 
+        choices=DATA_STRUCTURES, 
+        widget=forms.RadioSelect,
+        required=True)
 
     CHALLENGES = list(reversed([
         ("Yes, weekly", "Yes, weekly"),
@@ -67,7 +79,11 @@ class ProgrammerSurveyForm(forms.Form):
         ("Rarely", "Rarely"),
         ("Never", "Never"),
     ]))
-    challenges = forms.ChoiceField(label="Do you solve coding challenges?", choices=CHALLENGES)
+    challenges = forms.ChoiceField(
+        label="Do you solve coding challenges?", 
+        choices=CHALLENGES, 
+        widget=forms.RadioSelect,
+        required=True)
 
     GIT = list(reversed([
         ("Expert", "Expert"),
@@ -75,14 +91,22 @@ class ProgrammerSurveyForm(forms.Form):
         ("Learning", "Learning"),
         ("Never used", "Never used"),
     ]))
-    git = forms.ChoiceField(label="Familiarity with Git", choices=GIT)
+    git = forms.ChoiceField(
+        label="Familiarity with Git", 
+        choices=GIT, 
+        widget=forms.RadioSelect,
+        required=True)
 
     CICD = list(reversed([
         ("Set it up myself", "Set it up myself"),
         ("Used in a team", "Used in a team"),
         ("Not yet", "Not yet"),
     ]))
-    ci_cd = forms.ChoiceField(label="Worked with CI/CD pipelines?", choices=CICD)
+    ci_cd = forms.ChoiceField(
+        label="Worked with CI/CD pipelines?", 
+        choices=CICD, 
+        widget=forms.RadioSelect,
+        required=True)
 
     TESTING = list(reversed([
         ("Unit tests", "Unit tests"),
@@ -90,14 +114,22 @@ class ProgrammerSurveyForm(forms.Form):
         ("Manual testing only", "Manual testing only"),
         ("Rarely test", "Rarely test"),
     ]))
-    testing = forms.ChoiceField(label="How do you test code?", choices=TESTING)
+    testing = forms.ChoiceField(
+        label="How do you test code?", 
+        choices=TESTING, 
+        widget=forms.RadioSelect,
+        required=True)
 
     OPEN_SOURCE = list(reversed([
         ("Yes", "Yes"),
         ("Interested", "Interested"),
         ("No", "No"),
     ]))
-    open_source = forms.ChoiceField(label="Open-source contributions?", choices=OPEN_SOURCE)
+    open_source = forms.ChoiceField(
+        label="Open-source contributions?", 
+        choices=OPEN_SOURCE, 
+        widget=forms.RadioSelect,
+        required=True)
     largest_project = forms.CharField(label="Largest project", widget=forms.Textarea, required=False)
 
     AGILE = list(reversed([
@@ -105,28 +137,44 @@ class ProgrammerSurveyForm(forms.Form):
         ("Somewhat familiar", "Somewhat familiar"),
         ("No", "No"),
     ]))
-    agile = forms.ChoiceField(label="Experience with Agile/Scrum?", choices=AGILE)
+    agile = forms.ChoiceField(
+        label="Experience with Agile/Scrum?", 
+        choices=AGILE, 
+        widget=forms.RadioSelect,
+        required=True)
 
     ARCHITECTURE = list(reversed([
         ("Yes, professionally", "Yes, professionally"),
         ("Yes, personal projects", "Yes, personal projects"),
         ("Not yet", "Not yet"),
     ]))
-    architecture = forms.ChoiceField(label="Designed a system architecture?", choices=ARCHITECTURE)
+    architecture = forms.ChoiceField(
+        label="Designed a system architecture?", 
+        choices=ARCHITECTURE, 
+        widget=forms.RadioSelect,
+        required=True)
 
     CONCEPTS = list(reversed([
         ("Strong understanding", "Strong understanding"),
         ("Basic familiarity", "Basic familiarity"),
         ("No", "No"),
     ]))
-    concepts = forms.ChoiceField(label="Familiarity with system design concepts?", choices=CONCEPTS)
+    concepts = forms.ChoiceField(
+        label="Familiarity with system design concepts?", 
+        choices=CONCEPTS, 
+        widget=forms.RadioSelect,
+        required=True)
 
     DEPLOYMENT = list(reversed([
         ("Frequently", "Frequently"),
         ("A few times", "A few times"),
         ("Never", "Never"),
     ]))
-    deployment = forms.ChoiceField(label="Deployment experience?", choices=DEPLOYMENT)
+    deployment = forms.ChoiceField(
+        label="Deployment experience?", 
+        choices=DEPLOYMENT, 
+        widget=forms.RadioSelect,
+        required=True)
 
     PLATFORMS = list(reversed([
         ("AWS", "AWS"),
@@ -143,7 +191,11 @@ class ProgrammerSurveyForm(forms.Form):
         ("AI", "Machine Learning / AI"),
         ("DevOps", "DevOps"),
     ]))
-    interests = forms.MultipleChoiceField(label="Favorite dev areas", choices=INTERESTS, widget=forms.CheckboxSelectMultiple, required=False)
+    interests = forms.MultipleChoiceField(
+        label="Favorite dev areas", 
+        choices=INTERESTS, 
+        widget=forms.CheckboxSelectMultiple, 
+        required=False)
     interests_other = forms.CharField(label="Other interests", required=False)
 
     LEARNING = list(reversed([
@@ -152,4 +204,4 @@ class ProgrammerSurveyForm(forms.Form):
         ("When needed", "When needed"),
         ("Rarely", "Rarely"),
     ]))
-    learning = forms.ChoiceField(label="How often do you learn new tech?", choices=LEARNING)
+    learning = forms.ChoiceField(label="How often do you learn new tech?", choices=LEARNING, widget=forms.RadioSelect)
