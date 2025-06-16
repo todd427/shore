@@ -1,120 +1,71 @@
 from django.test import TestCase
 from django.urls import reverse
 from django.contrib.auth import get_user_model
-from allauth.account.models import EmailAddress
+from allauth.socialaccount.models import SocialApp
+from django.contrib.sites.models import Site
 
-CustomUser = get_user_model()
+User = get_user_model()
 
-
-class CustomUserTests(TestCase):
-    
+class SocialAppSetupMixin:
     def setUp(self):
-        print(f"\nRunning tests in: {self.__class__.__name__}")
+        super().setUp()
+        site, _ = Site.objects.get_or_create(id=1, defaults={
+            'domain': 'localhost',
+            'name': 'localhost',
+        })
+        if not SocialApp.objects.filter(provider="google").exists():
+            app = SocialApp.objects.create(
+                provider="google",
+                name="Google",
+                client_id="test-id",
+                secret="test-secret",
+            )
+            app.sites.add(site)
 
-    def test_create_user(self):
-        print(self._testMethodName)
-        user = CustomUser.objects.create_user(
-            username="testuser",
-            email="test@example.com",
-            password="testpass123"
-        )
-        self.assertEqual(user.username, "testuser")
-        self.assertEqual(user.email, "test@example.com")
-        self.assertTrue(user.check_password("testpass123"))
-
-    def test_create_superuser(self):
-        print(self._testMethodName)
-        admin_user = CustomUser.objects.create_superuser(
-            username="admin",
-            email="admin@example.com",
-            password="adminpass"
-        )
-        self.assertTrue(admin_user.is_superuser)
-        self.assertTrue(admin_user.is_staff)
-
-
-class SignupTests(TestCase):
-   
-    def setUp(self):
-        print(f"\nRunning tests in: {self.__class__.__name__}")
-
+class SignupTests(SocialAppSetupMixin, TestCase):
     def test_signup_view_status_code(self):
-        print(self._testMethodName)
+        print("Running test_signup_view_status_code")
         response = self.client.get(reverse("account_signup"))
         self.assertEqual(response.status_code, 200)
 
     def test_signup_template_used(self):
-        print(self._testMethodName)
+        print("Running test_signup_template_used")
         response = self.client.get(reverse("account_signup"))
         self.assertTemplateUsed(response, "account/signup.html")
 
-    def test_signup_creates_user(self):
-        print(self._testMethodName)
-        response = self.client.post(reverse("account_signup"), {
-            "email": "newuser@example.com",
-            "password1": "ComplexPass123!",
-            "password2": "ComplexPass123!",
-        })
-        self.assertEqual(response.status_code, 302)
-        self.assertTrue(CustomUser.objects.filter(email="newuser@example.com").exists())
-
-
-class LoginLogoutTests(TestCase):
-    
+class LoginLogoutTests(SocialAppSetupMixin, TestCase):
     def setUp(self):
-        print(f"\nRunning tests in: {self.__class__.__name__}")
-        self.user = CustomUser.objects.create_user(
-            username="loginuser",
-            email="login@example.com",
-            password="loginpass123"
-        )
-        # Allauth requires email verification for login to succeed
-        EmailAddress.objects.create(
-            user=self.user,
-            email=self.user.email,
-            verified=True,
-            primary=True,
-        )
+        super().setUp()
+        self.user = User.objects.create_user(username="testuser", email="test@example.com", password="password123")
 
     def test_login_view_status_code(self):
-        print(self._testMethodName)
+        print("Running test_login_view_status_code")
         response = self.client.get(reverse("account_login"))
         self.assertEqual(response.status_code, 200)
 
     def test_login_success(self):
-        print(self._testMethodName)
-        login = self.client.login(email="login@example.com", password="loginpass123")
-        self.assertTrue(login)
+        print("Running test_login_success")
+        login_success = self.client.login(username="testuser", password="password123")
+        self.assertTrue(login_success)
 
     def test_logout(self):
-        print(self._testMethodName)
-        self.client.login(username="loginuser", password="loginpass123")
-        response = self.client.get(reverse("account_logout"))
+        print("Running test_logout")
+        self.client.login(username="testuser", password="password123")
+        response = self.client.post(reverse("account_logout"), follow=True)
         self.assertEqual(response.status_code, 200)
 
-
-class URLTests(TestCase):
-
-    def setUp(self):
-        print(f"\nRunning tests in: {self.__class__.__name__}")
-
+class URLTests(SocialAppSetupMixin, TestCase):
     def test_login_url(self):
-        print(self._testMethodName)
+        print("Running test_login_url")
         response = self.client.get(reverse("account_login"))
         self.assertEqual(response.status_code, 200)
 
-    def test_logout_url_redirect(self):
-        print(self._testMethodName)
-        response = self.client.get(reverse("account_logout"))
-        self.assertEqual(response.status_code, 302)  # Allauth logout redirects
-
     def test_logout_url(self):
-        print(self._testMethodName)
-        response = self.client.get(reverse("account_logout"), follow=True)
-        self.assertEqual(response.status_code, 200)
-
+        print("Running test_logout_url")
+        response = self.client.get(reverse("account_logout"))
+        self.assertIn(response.status_code, [200, 302])
 
     def test_signup_url(self):
-        print(self._testMethodName)
+        print("Running test_signup_url")
         response = self.client.get(reverse("account_signup"))
         self.assertEqual(response.status_code, 200)

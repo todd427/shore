@@ -1,0 +1,188 @@
+from django.test import TestCase
+from django.urls import reverse
+from django.contrib.auth import get_user_model
+from allauth.account.models import EmailAddress
+
+CustomUser = get_user_model()
+
+
+class CustomUserTests(TestCase):
+    
+    def setUp(self):
+        print(f"\nRunning tests in: {self.__class__.__name__}")
+
+    def test_create_user(self):
+        print(self._testMethodName)
+        user = CustomUser.objects.create_user(
+            username="testuser",
+            email="test@example.com",
+            password="testpass123"
+        )
+        self.assertEqual(user.username, "testuser")
+        self.assertEqual(user.email, "test@example.com")
+        self.assertTrue(user.check_password("testpass123"))
+
+    def test_create_superuser(self):
+        print(self._testMethodName)
+        admin_user = CustomUser.objects.create_superuser(
+            username="admin",
+            email="admin@example.com",
+            password="adminpass"
+        )
+        self.assertTrue(admin_user.is_superuser)
+        self.assertTrue(admin_user.is_staff)
+
+
+class SignupTests(TestCase):
+   
+    def setUp(self):
+        print(f"\nRunning tests in: {self.__class__.__name__}")
+
+    def test_signup_view_status_code(self):
+        print(self._testMethodName)
+        response = self.client.get(reverse("account_signup"))
+        self.assertEqual(response.status_code, 200)
+
+    def test_signup_template_used(self):
+        print(self._testMethodName)
+        response = self.client.get(reverse("account_signup"))
+        self.assertTemplateUsed(response, "account/signup.html")
+
+    def test_signup_creates_user(self):
+        print(self._testMethodName)
+        response = self.client.post(reverse("account_signup"), {
+            "email": "newuser@example.com",
+            "password1": "ComplexPass123!",
+            "password2": "ComplexPass123!",
+        })
+        self.assertEqual(response.status_code, 302)
+        self.assertTrue(CustomUser.objects.filter(email="newuser@example.com").exists())
+
+
+class LoginLogoutTests(TestCase):
+    
+    def setUp(self):
+        print(f"\nRunning tests in: {self.__class__.__name__}")
+        self.user = CustomUser.objects.create_user(
+            username="loginuser",
+            email="login@example.com",
+            password="loginpass123"
+        )
+        # Allauth requires email verification for login to succeed
+        EmailAddress.objects.create(
+            user=self.user,
+            email=self.user.email,
+            verified=True,
+            primary=True,
+        )
+
+    def test_login_view_status_code(self):
+        print(self._testMethodName)
+        response = self.client.get(reverse("account_login"))
+        self.assertEqual(response.status_code, 200)
+
+    def test_login_success(self):
+        print(self._testMethodName)
+        login = self.client.login(email="login@example.com", password="loginpass123")
+        self.assertTrue(login)
+
+    def test_logout(self):
+        print(self._testMethodName)
+        self.client.login(username="loginuser", password="loginpass123")
+        response = self.client.get(reverse("account_logout"))
+        self.assertEqual(response.status_code, 200)
+
+
+class URLTests(TestCase):
+
+    def setUp(self):
+        print(f"\nRunning tests in: {self.__class__.__name__}")
+
+    def test_login_url(self):
+        print(self._testMethodName)
+        response = self.client.get(reverse("account_login"))
+        self.assertEqual(response.status_code, 200)
+
+    def test_logout_url_redirect(self):
+        print(self._testMethodName)
+        response = self.client.get(reverse("account_logout"))
+        self.assertEqual(response.status_code, 302)  # Allauth logout redirects
+
+    def test_logout_url(self):
+        print(self._testMethodName)
+        response = self.client.get(reverse("account_logout"), follow=True)
+        self.assertEqual(response.status_code, 200)
+
+
+    def test_signup_url(self):
+        print(self._testMethodName)
+        response = self.client.get(reverse("account_signup"))
+        self.assertEqual(response.status_code, 200)
+
+from unittest.mock import patch
+from allauth.socialaccount.models import SocialApp
+from django.contrib.sites.models import Site
+
+from allauth.socialaccount.models import SocialAccount
+from allauth.socialaccount.providers.google.provider import GoogleProvider
+from allauth.socialaccount.helpers import complete_social_login
+from django.test import RequestFactory
+from django.contrib.auth.models import AnonymousUser
+
+def create_test_google_social_app():
+    site, _ = Site.objects.get_or_create(domain="localhost", name="localhost")
+
+    app, _ = SocialApp.objects.get_or_create(
+        provider="google",
+        name="Google",
+        client_id="test-client-id",
+        secret="test-secret-key",
+    )
+    app.sites.add(site)
+    return app
+
+
+
+class GoogleSSOTests(TestCase):
+   
+    def setUp(self):
+        print(f"\nRunning tests in: {self.__class__.__name__}")
+        self.factory = RequestFactory()
+        self.google_app = create_test_google_social_app()
+
+    @patch("allauth.socialaccount.providers.google.views.requests")
+    def test_mock_google_login_flow(self, mock_requests):
+        print(self._testMethodName)
+
+        # Simulate Google response
+        mock_account_data = {
+            "sub": "1234567890",
+            "email": "googletest@example.com",
+            "email_verified": True,
+            "given_name": "Google",
+            "family_name": "User",
+        }
+
+        # Fake the token response from Google
+        mock_requests.get.return_value.json.return_value = mock_account_data
+
+        # Build a fake social login
+        request = self.factory.get("/accounts/google/login/callback/")
+        request.user = AnonymousUser()
+
+        # Simulate provider login response
+        from allauth.socialaccount.providers.google.views import GoogleOAuth2Adapter
+        from allauth.socialaccount.providers.oauth2.client import OAuth2Client
+        from allauth.socialaccount.models import SocialLogin, SocialToken, SocialApp
+
+        token = SocialToken(app=self.google_app, token="mock-token")
+        user = CustomUser.objects.create(email="googletest@example.com")
+        account = SocialAccount.objects.create(provider="google", uid="1234567890", user=user)
+        token = SocialToken(app=app, token="mock-token", account=account)
+        login = SocialLogin(account=account, token=token)
+        login.user = user
+
+        # Complete the login
+        response = complete_social_login(request, login)
+        self.assertIsNotNone(login.user)
+        self.assertEqual(login.user.email, "googletest@example.com")
