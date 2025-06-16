@@ -23,7 +23,7 @@ urlpatterns = [
     path('', HomePageView.as_view(), name='home'),
     path('polls/', include('polls.urls')),
     path('admin/', admin.site.urls),
-    path('accounts/', include('accounts.urls')),
+    path('accounts/', include('allauth.urls')),
     path('pages/', include('pages.urls')),
     path('surveys/', include('surveys.urls')),
     path('questionnaire/', include('surveys.urls')),

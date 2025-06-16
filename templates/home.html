@@ -14,13 +14,13 @@
 {% if user.is_authenticated %}
 <p>Welcome, {{ user.email }}.</p>
 <p>here we are again, naturally.</p>
-<form method="post" action="{% url 'logout' %}">
+<form method="post" action="{% url 'account_logout' %}">
   {% csrf_token %}
   <button class="btn btn-danger" style="margin-left: 10px;"  type="submit">Log Out</button>
 </form>
 {% else %}    
-<p>Please <a class="btn btn-primary" style="margin-left: 10px;" href="{% url 'login' %}">Login</a></p>
-<p>Don't have an account? <a class="btn btn-primary" style="margin-left: 10px;" href="{% url 'signup' %}">Sign Up</a></p>
+<p>Please <a class="btn btn-primary" style="margin-left: 10px;" href="{% url 'account_login' %}">Login</a></p>
+<p>Don't have an account? <a class="btn btn-primary" style="margin-left: 10px;" href="{% url 'account_signup' %}">Sign Up</a></p>
 {% endif %}
 </div>
 {% endblock content %} 
