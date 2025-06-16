@@ -4,11 +4,13 @@
 {% load static %}
 {% block content %}
 <div class="container">
+<!--
 <h1 style="text-align:center">Welcome to Foxxe Frey Labs</h1>
+-->
 <div class="container">
         <img src="{% static 'images/FoxxeFreyLabs.png' %}" style="width: 20%; height: 20%;" alt="Foxxe Frey Labs">
-        <p>Foxxe Frey Labs is a software development company that specializes in building custom software solutions for businesses.</p>
-</div>
+        <h1>Foxxe Frey Labs</h1>
+
 {% if user.is_authenticated %}
 <p>Welcome, {{ user.email }}.</p>
 <p>here we are again, naturally.</p>

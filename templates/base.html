@@ -17,14 +17,20 @@
 <body>
   <nav class="navbar navbar-expand-lg navbar-light bg-light">
     <div class="container-fluid">
-      <a class="navbar-brand" href="#">Foxxe Frey Labs</a>
+      <a class="navbar-brand" href="{% url 'home' %}">Foxxe Frey Labs</a>
       <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
         <span class="navbar-toggler-icon"></span>
       </button>
       <div class="collapse navbar-collapse" id="navbarCollapse">
         <ul class="navbar-nav me-auto mb-2 mb-md-0">
           <li class="nav-item">
-            <a class="nav-link" href="{% url 'questionnaire' code='persquiz' %}">Questionnaire</a>
+            <a class="nav-link" href="{% url 'polls:index' %}">Polls</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="{% url 'questionnaire' code='persquiz' %}">Personality Quiz</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="{% url 'questionnaire' code='progexp' %}">Programming Experience</a>
           </li>
           <li class="nav-item">
             <a class="nav-link" href="{% url 'lander' %}">Lunar Lander</a>
@@ -51,7 +57,7 @@
       </div>
     </div>
   </nav>
-  <h1>Hello from base.html</h1>
+  <p>base.html (remove before production)</p>
   <div class="container">
     {% block content %}
     {% endblock content %}
