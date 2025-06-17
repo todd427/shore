@@ -61,8 +61,8 @@ AUTHENTICATION_BACKENDS = [
     'allauth.account.auth_backends.AuthenticationBackend',
 ]
 
-# EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
-EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
+#EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
 
 AUTH_USER_MODEL = 'accounts.CustomUser'
 
@@ -83,9 +83,7 @@ ACCOUNT_UNIQUE_EMAIL = True
 ACCOUNT_LOGIN_METHODS = {"email"}
 ACCOUNT_SIGNUP_FIELDS = ["email*", "password1*", "password2*"]
 
-ACCOUNT_EMAIL_REQUIRED = True
-ACCOUNT_USERNAME_REQUIRED = False
-ACCOUNT_AUTHENTICATION_METHOD = 'email'
+
 ACCOUNT_USER_MODEL_USERNAME_FIELD = None
 
 ACCOUNT_SIGNUP_REDIRECT_URL = "/"
@@ -111,11 +109,10 @@ SOCIALACCOUNT_PROVIDERS = {
 
 # allauth settings
 SOCIALACCOUNT_LOGIN_ON_GET = True
-ACCOUNT_ADAPTER = 'accounts.account_adapter.CustomAccountAdapter'
 
-SOCIALACCOUNT_ADAPTER = "accounts.account_adapter.CustomSocialAccountAdapter"
+ACCOUNT_ADAPTER = 'accounts.adapter.CustomAccountAdapter'
 
-EMAIL_BACKEND = "django.core.mail.backends.smtp.EmailBackend"
+SOCIALACCOUNT_ADAPTER = 'accounts.adapter.NoSignupFormAdapter'
 
 EMAIL_HOST = "mail.smtp2go.com"
 EMAIL_PORT = 587

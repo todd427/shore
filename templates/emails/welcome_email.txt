@@ -1,0 +1,7 @@
+Hi {{ user.first_name|default:"there" }},
+
+Welcome to Foxxe Labs! We’re thrilled to have you.
+
+Feel free to explore, test, and create with confidence.
+
+— The Foxxe Team
