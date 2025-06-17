@@ -21,7 +21,7 @@ class NoSignupFormAdapter(DefaultSocialAccountAdapter):
             print("📨 NoSignupFormAdapter: sending welcome email to", user.email)
             subject = "🎉 Welcome to Foxxe Labs!"
             message = render_to_string("emails/welcome_email.txt", {"user": user})
-            print("📧 Composed message:\n", message)
+            #print("📧 Composed message:\n", message)
             send_mail(
                 subject,
                 message,
@@ -44,7 +44,6 @@ class NoSignupFormAdapter(DefaultSocialAccountAdapter):
         user.is_active = True
         user.save()
 
-        self.send_welcome_email(user)
         return user
 
 
@@ -61,7 +60,7 @@ class CustomAccountAdapter(DefaultAccountAdapter):
             print("📨 CustomAccountAdapter: sending welcome email to", user.email)
             subject = "🎉 Welcome to Foxxe Labs!"
             message = render_to_string("emails/welcome_email.txt", {"user": user})
-            print("📧 Composed message:\n", message)
+            #print("📧 Composed message:\n", message)
             send_mail(
                 subject,
                 message,

@@ -121,7 +121,7 @@ EMAIL_USE_TLS = True  # Use True for TLS (port 587), or set to False and use por
 EMAIL_HOST_USER = config("EMAIL_HOST_USER")
 EMAIL_HOST_PASSWORD = config("EMAIL_HOST_PASSWORD")
 
-DEFAULT_FROM_EMAIL = "Todd McCaffrey <todd@foxxelabs.com>"
+DEFAULT_FROM_EMAIL = "noreply@foxxelabs.com"
 
 
 
