@@ -24,7 +24,8 @@ urlpatterns = [
     path('polls/', include('polls.urls')),
     path('admin/', admin.site.urls),
     path('accounts/', include('allauth.urls')),
-    path('pages/', include('pages.urls')),
     path('surveys/', include('surveys.urls')),
     path('questionnaire/', include('surveys.urls')),
+    path("pages/", include("pages.urls")),  # ✅ this must exist
+    path("", include("pages.urls")),  
 ]
