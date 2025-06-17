@@ -11,22 +11,17 @@
 -->
 </div>
 <div class="container">
-        <img src="{% static 'images/FoxxeFreyLabs.png' %}" style="width: 20%; height: 20%;" alt="Foxxe Frey Labs">
-        <h1>Foxxe Frey Labs</h1>
+      <img src="{% static 'images/FoxxeFreyLabs.png' %}" style="width: 20%; height: 20%;" alt="Foxxe Frey Labs">
+      <h1>Foxxe Labs</h1>
       <p>User: {{ user }}</p>
-      <p>Is Authenticated: {{ user.is_authenticated }}</p>
       <p>Email: {{ user.email }}</p>
         
 {% if user.is_authenticated %}
-<p>Welcome, {{ user.email }}.</p>
-<p>here we are again, naturally.</p>
 <form method="post" action="{% url 'account_logout' %}">
   {% csrf_token %}
   <button class="btn btn-danger" style="margin-left: 10px;"  type="submit">Log Out</button>
 </form>
 {% else %}  
-
-<p>mangled poe</p>
 <div class="d-flex flex-wrap gap-3 mt-3">
   <a class="btn btn-primary" href="{% provider_login_url 'google' method='oauth2' %}?prompt=select_account">Log in with Google</a>
   <a class="btn btn-outline-primary" href="{% url 'account_login' %}">Login</a>

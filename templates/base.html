@@ -42,12 +42,15 @@
           </li>
 
           {% if user.is_authenticated %}
-          <li class="nav-item">
-            <form method="post" action="{% url 'account_logout' %}" style="display: inline;">
+          <li class="nav-item d-flex align-items-center">
+            <form method="post" action="{% url 'account_logout' %}" class="m-0 p-0">
               {% csrf_token %}
-              <button class="btn btn-link nav-link" type="submit" style="padding: 0;">Log Out</button>
+              <button type="submit" class="nav-link btn btn-link p-0 m-0 align-baseline" style="line-height: inherit;">
+                Log Out
+              </button>
             </form>
           </li>
+          
           {% else %}
           <li class="nav-item">
             <a class="nav-link" href="{% provider_login_url 'google' method='oauth2' %}">Sign in with Google</a>
