@@ -1,0 +1,26 @@
+<!-- templates/surveys/show_survey.html -->
+{% extends "base.html" %}
+{% load static %}
+<link rel="stylesheet" href="{% static 'surveys/css/take_survey.css' %}">
+<script src="{% static 'surveys/js/take_survey.js' %}"></script>
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels"></script>
+
+{% block content %}
+    <h1>{{ survey.title }}</h1>
+    <p>{{ survey.description }}</p>
+    {% for section in survey.sections.all %}
+    <h2>{{ section.label|default:section.name }}</h2>
+        <p>{{ section.description }}</p>
+        {% for poll in section.polls.all %}
+            <div>
+                <strong>{{ poll.question_text }}</strong>
+                <ul>
+                    {% for choice in poll.choice_set.all %}
+                        <li>{{ choice.choice_text }}</li>
+                    {% endfor %}
+                </ul>
+            </div>
+        {% endfor %}
+    {% endfor %}
+{% endblock %}
