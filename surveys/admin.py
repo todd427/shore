@@ -1,10 +1,17 @@
+# surveys/admin.py
+
 from django.contrib import admin
 from django.utils.html import format_html
 from django.urls import reverse
+from .models import Section, Survey  # your new survey/section models
+from polls.models import Question as Poll  # polls app question
+
 
 from .models import Questionnaire, Question, Response
 
 from django.urls import reverse, NoReverseMatch
+
+from .models import Survey, Section, SurveySection, SectionPoll
 
 class QuestionnaireAdmin(admin.ModelAdmin):
 
@@ -31,6 +38,26 @@ class QuestionnaireAdmin(admin.ModelAdmin):
         except NoReverseMatch:
             return "Invalid code"
     export_csv_link.short_description = "Export"
+
+
+class SurveySectionInline(admin.TabularInline):
+    model = SurveySection
+    extra = 1
+
+class SurveyAdmin(admin.ModelAdmin):
+    inlines = [SurveySectionInline]
+
+class SectionPollInline(admin.TabularInline):
+    model = SectionPoll
+    extra = 1
+
+class SectionAdmin(admin.ModelAdmin):
+    inlines = [SectionPollInline]
+
+    
+
+admin.site.register(Section, SectionAdmin)
+admin.site.register(Survey, SurveyAdmin)
 
 admin.site.register(Questionnaire, QuestionnaireAdmin)
 admin.site.register(Question)

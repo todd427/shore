@@ -1,4 +1,7 @@
+# surveys/models.py
+
 from django.db import models
+from polls.models import Question as Poll  # Classic Poll object
 
 AGE_CHOICES = [
     ("0–2", "0–2 (Infant)"),
@@ -76,3 +79,51 @@ class ProgrammerResponse(models.Model):
 
     def __str__(self):
         return f"{self.first_name} {self.last_name} ({self.age})"
+    
+
+from polls.models import Question as Poll
+
+class Section(models.Model):
+    name = models.CharField(max_length=100)
+    polls = models.ManyToManyField(Poll, through='SectionPoll', related_name='sections', blank=True)
+    label = models.CharField(max_length=200, null=True, blank=True)
+
+    def __str__(self):
+        # Prefer label, then name, then ID fallback
+        return self.name or f"Section {self.pk}"
+
+class SectionPoll(models.Model):
+    section = models.ForeignKey(Section, on_delete=models.CASCADE)
+    poll = models.ForeignKey(Poll, on_delete=models.CASCADE)
+    order = models.PositiveIntegerField(default=0)
+
+    class Meta:
+        ordering = ['order']
+        unique_together = ('section', 'poll')
+
+    def __str__(self):
+        # Use the correct field for your Poll object:
+        return f"{self.section.name} - {self.poll.question_text}"
+
+
+class Survey(models.Model):
+    title = models.CharField(max_length=200)
+    slug = models.SlugField(null=True, blank=True)  # ABSOLUTELY NO unique=True YET!
+
+    description = models.TextField(blank=True)
+    sections = models.ManyToManyField(Section, through='SurveySection', related_name='surveys')
+
+    def __str__(self):
+        return self.title
+    
+class SurveySection(models.Model):  # <--- This is the new model
+    survey = models.ForeignKey(Survey, on_delete=models.CASCADE)
+    section = models.ForeignKey(Section, on_delete=models.CASCADE)
+    order = models.PositiveIntegerField(default=0)
+
+    class Meta:
+        unique_together = ('survey', 'section')
+        ordering = ['order']
+    
+    def __str__(self):
+        return f"{self.survey.title} - {self.section.name}"

@@ -1,3 +1,5 @@
+# surveys/views.py
+
 from django.shortcuts import render, get_object_or_404, redirect
 from django.http import HttpResponse, JsonResponse
 from django.views.decorators.csrf import csrf_exempt
@@ -8,7 +10,7 @@ import hashlib
 import json
 import csv
 
-from .models import Questionnaire, Question, Response, AGE_CHOICES, ProgrammerResponse
+from .models import Questionnaire, Question, Response, AGE_CHOICES, ProgrammerResponse, Survey, Section, SectionPoll
 from .forms import DynamicSurveyForm
 
 # Utility to generate UUID
@@ -159,3 +161,29 @@ def programmer_questionnaire_view(request):
         'form': form,
         'submitted': submitted
     })
+
+def show_survey(request, slug):
+    survey = get_object_or_404(Survey, slug=slug)
+
+    # Fetch related sections/polls as you wish...
+    # Build context and render
+    return render(request, 'surveys/show_survey.html', {'survey': survey})
+
+def take_survey(request, survey_slug):
+    survey = get_object_or_404(Survey, slug=survey_slug)
+    # Prefetch related sections and polls, sorted by order
+    sections = survey.sections.through.objects.filter(survey=survey).order_by('order')
+    section_objs = [sp.section for sp in sections]
+
+    # For each section, get its polls
+    context_sections = []
+    for section in section_objs:
+        polls = section.polls.through.objects.filter(section=section).order_by('order')
+        poll_objs = [p.poll for p in polls]
+        context_sections.append({'section': section, 'polls': poll_objs})
+
+    context = {
+        'survey': survey,
+        'sections': context_sections,
+    }
+    return render(request, "surveys/take_survey.html", context)

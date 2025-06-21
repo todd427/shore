@@ -1,0 +1,36 @@
+<!-- surveys/templates/surveys/take_survey.html -->
+ {% extends "base.html" %}
+
+ {% block content %}
+ {% load static %}
+ <link rel="stylesheet" href="{% static 'surveys/css/take_survey.css' %}">
+ <script src="{% static 'surveys/js/take_survey.js' %}"></script>
+ <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+ <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels"></script>
+
+<h1>{{ survey.title }}</h1>
+<p>{{ survey.description }}</p>
+
+<form method="post">
+  {% csrf_token %}
+  {% for s in sections %}
+    <h2>{{ s.section.name }}</h2>
+    <p>{{ s.section.description }}</p>
+    {% for poll in s.polls %}
+      <div>
+        <strong>{{ poll.question_text }}</strong>
+        <ul>
+          {% for choice in poll.choice_set.all %}
+            <li>
+              <label>
+                <input type="radio" name="question_{{ poll.id }}" value="{{ choice.id }}">
+                {{ choice.choice_text }}
+              </label>
+            </li>
+          {% endfor %}
+        </ul>
+      </div>
+    {% endfor %}
+  {% endfor %}
+  <button type="submit">Submit Survey</button>
+</form>

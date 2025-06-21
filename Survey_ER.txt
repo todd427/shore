@@ -1,0 +1,4 @@
+Survey
+  |--< SurveySection >-- Section
+                              |--< SectionPoll >-- Poll
+                                              |--< Choice
