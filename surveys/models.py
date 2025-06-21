@@ -108,7 +108,7 @@ class SectionPoll(models.Model):
 
 class Survey(models.Model):
     title = models.CharField(max_length=200)
-    slug = models.SlugField(null=True, blank=True)  # ABSOLUTELY NO unique=True YET!
+    slug = models.SlugField(unique=True) 
 
     description = models.TextField(blank=True)
     sections = models.ManyToManyField(Section, through='SurveySection', related_name='surveys')
