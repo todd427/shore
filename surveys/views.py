@@ -10,7 +10,25 @@ import hashlib
 import json
 import csv
 
-from .models import Questionnaire, Question, Response, AGE_CHOICES, ProgrammerResponse, Survey, Section, SectionPoll
+from .models import (
+    Questionnaire, 
+    Question, 
+    Response, 
+    AGE_CHOICES, 
+    ProgrammerResponse, 
+    Survey, 
+    Section, 
+    SectionPoll,
+    SurveyResponse
+)
+
+
+from django.shortcuts import render, get_object_or_404, redirect
+from .models import Survey, SurveyResponse
+from polls.models import Question as Poll
+
+
+
 from .forms import DynamicSurveyForm
 
 # Utility to generate UUID
@@ -164,10 +182,34 @@ def programmer_questionnaire_view(request):
 
 def show_survey(request, slug):
     survey = get_object_or_404(Survey, slug=slug)
+    sections = survey.sections.all().order_by('surveysection__order')
 
-    # Fetch related sections/polls as you wish...
-    # Build context and render
-    return render(request, 'surveys/show_survey.html', {'survey': survey})
+    if request.method == 'POST':
+        # Build a dictionary of answers: {poll_id: choice_id}
+        answers = {}
+        for section in sections:
+            polls = section.polls.all().order_by('sectionpoll__order')
+            for poll in polls:
+                val = request.POST.get(f'poll_{poll.id}')
+                if val:
+                    answers[str(poll.id)] = val
+        # Save response only if answers for all polls
+        if len(answers) == sum(section.polls.count() for section in sections):
+            SurveyResponse.objects.create(survey=survey, answers=answers)
+            return render(request, 'surveys/thank_you.html', {'survey': survey})
+        else:
+            # Show form again with error
+            error = "Please answer all questions."
+            return render(request, 'surveys/show_survey.html', {
+                'survey': survey,
+                'sections': sections,
+                'error': error,
+            })
+            
+    return render(request, 'surveys/show_survey.html', {
+        'survey': survey,
+        'sections': sections
+    })
 
 def take_survey(request, survey_slug):
     survey = get_object_or_404(Survey, slug=survey_slug)

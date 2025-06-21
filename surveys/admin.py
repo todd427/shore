@@ -4,6 +4,7 @@ from django.contrib import admin
 from django.utils.html import format_html
 from django.urls import reverse
 from .models import Section, Survey  # your new survey/section models
+from .models import SurveyResponse
 from polls.models import Question as Poll  # polls app question
 
 
@@ -54,7 +55,12 @@ class SectionPollInline(admin.TabularInline):
 class SectionAdmin(admin.ModelAdmin):
     inlines = [SectionPollInline]
 
-    
+class SurveyResponseAdmin(admin.ModelAdmin):
+    list_display = ("survey", "submitted_at")
+    list_filter = ("survey",)
+    search_fields = ("survey__title",)
+
+admin.site.register(SurveyResponse, SurveyResponseAdmin)   
 
 admin.site.register(Section, SectionAdmin)
 admin.site.register(Survey, SurveyAdmin)

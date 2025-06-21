@@ -3,6 +3,8 @@
 from django.db import models
 from polls.models import Question as Poll  # Classic Poll object
 
+from django.contrib.postgres.fields import JSONField  # Or use models.JSONField for Django 3.1+
+
 AGE_CHOICES = [
     ("0–2", "0–2 (Infant)"),
     ("3–12", "3–12 (Child)"),
@@ -127,3 +129,12 @@ class SurveySection(models.Model):  # <--- This is the new model
     
     def __str__(self):
         return f"{self.survey.title} - {self.section.name}"
+    
+
+class SurveyResponse(models.Model):
+    survey = models.ForeignKey(Survey, on_delete=models.CASCADE)
+    submitted_at = models.DateTimeField(auto_now_add=True)
+    answers = models.JSONField()  # Dict: {poll_id: choice_id}
+
+    # Optionally link to user or add other metadata
+
